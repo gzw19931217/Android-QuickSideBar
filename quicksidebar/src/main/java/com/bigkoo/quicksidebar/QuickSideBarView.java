@@ -33,6 +33,8 @@ public class QuickSideBarView extends View {
     private int mHeight;
     private float mItemHeight;
     private float mItemStartY;
+    //计算位置
+    private Rect mRect = new Rect();
 
     public QuickSideBarView(Context context) {
         this(context, null);
@@ -69,6 +71,7 @@ public class QuickSideBarView extends View {
 
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        mItemStartY = (mHeight - mLetters.size()*mItemHeight)/2;
         for (int i = 0; i < mLetters.size(); i++) {
             mPaint.setColor(mTextColor);
 
@@ -81,12 +84,9 @@ public class QuickSideBarView extends View {
                 mPaint.setTextSize(mTextSizeChoose);
             }
 
-
-            //计算位置
-            Rect rect = new Rect();
-            mPaint.getTextBounds(mLetters.get(i), 0, mLetters.get(i).length(), rect);
-            float xPos = (int) ((mWidth - rect.width()) * 0.5);
-            float yPos = mItemHeight * i + (int) ((mItemHeight - rect.height()) * 0.5) + mItemStartY;
+            mPaint.getTextBounds(mLetters.get(i), 0, mLetters.get(i).length(), mRect);
+            float xPos = (int) ((mWidth - mRect.width()) * 0.5);
+            float yPos = mItemHeight * i + (int) ((mItemHeight - mRect.height()) * 0.5) + mItemStartY;
 
 
             canvas.drawText(mLetters.get(i), xPos, yPos, mPaint);
@@ -100,7 +100,6 @@ public class QuickSideBarView extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         mHeight = getMeasuredHeight();
         mWidth = getMeasuredWidth();
-        mItemStartY = (mHeight - mLetters.size()*mItemHeight)/2;
     }
 
     @Override
